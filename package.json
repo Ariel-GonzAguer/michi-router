@@ -1,7 +1,7 @@
 {
   "name": "@arielgonzaguer/michi-router",
   "private": false,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The minimalist and simple router for React",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
