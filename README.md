@@ -1,6 +1,16 @@
 # Michi Router
 
 El router minimalista y simple para React.
+El objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.
+
+## Características
+
+- Es idea para proyectos pequeños o que solo necesitan una funcionalidad básica de enrutamiento.
+- No requiere de ninguna configuración adicional.
+- No requiere de ninguna dependencia externa.
+- Es compatible con React 16.8 y versiones posteriores.
+- Creado con TypeScript.
+- Ultra ligero. Menos de 15kb (más ligero y básico que otras librerías).
 
 ## Installation
 
@@ -113,6 +123,32 @@ Hook para navegación programática.
 
 - Función navigate que acepta la ruta como parámetro
 
+## Próximas características
+
+- [ ] Soporte para rutas anidadas.
+  ```jsx
+  const routes = [
+    {
+      path: "/dashboard",
+      component: <Dashboard />,
+      children: [
+        { path: "/users", component: <Users /> },
+        { path: "/settings", component: <Settings /> },
+      ],
+    },
+  ];
+  ```
+- [ ] Transiciones entre rutas.
+  ```jsx
+  <RouterProvider routes={routes} transitions={true} transitionDuration={300}>
+    <NotFound />
+  </RouterProvider>
+  ```
+
 ## Licencia
 
 MIT
+
+```
+
+```
