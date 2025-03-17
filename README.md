@@ -13,15 +13,15 @@ El objetivo principal de esta herramienta es proporcionar la funcionalidad bási
 - No requiere de ninguna configuración adicional.
 - No requiere de ninguna dependencia externa.
 - Creado con TypeScript.
-- Ultra ligero. Menos de 20kb (más ligero y básico que otras librerías).
+- Ultra ligero.
 
 ## Compatibilidad
 
 - React 16.8+.
-- Funciona con proyectos creados con Create React App, Vite, Next.js, etc.
+- Funciona con proyectos creados con  Vite, Next.js, etc.
 - Totalmente tipado con TypeScript.
 
-## Installation
+## Instalación
 
 ```bash
 npm install @arielgonzaguer/michi-router
@@ -31,7 +31,7 @@ npm install @arielgonzaguer/michi-router
 
 ```jsx
 // src/App.jsx //
-import { RouterProvider, Link } from "@arielgonzaguer/michi-router";
+import { RouterProvider} from "@arielgonzaguer/michi-router";
 
 // puede crear rutas en un archivo separado o en el mismo archivo
 const routes = [
@@ -53,6 +53,8 @@ function App() {
 
 #### Usando el componente Link solo con prop to
 ```jsx
+import { Link} from "@arielgonzaguer/michi-router";
+
 function NavigationComponent() {
   return (
     <nav>
@@ -65,6 +67,8 @@ function NavigationComponent() {
 
 #### Usando el componente Link con todas las props
 ```jsx
+import { Link} from "@arielgonzaguer/michi-router";
+
 <Link 
   to="/contact" 
   className="nav-link" 
@@ -217,31 +221,6 @@ Hook para navegación programática.
 **Retorna:**
 
 - Función navigate que acepta la ruta como parámetro.
-
-## Próximas características
-
-- [ ] Soporte para rutas anidadas.
-
-  ```jsx
-  const routes = [
-    {
-      path: "/dashboard",
-      component: <Dashboard />,
-      children: [
-        { path: "/users", component: <Users /> },
-        { path: "/settings", component: <Settings /> },
-      ],
-    },
-  ];
-  ```
-
-- [ ] Transiciones entre rutas.
-
-  ```jsx
-  <RouterProvider routes={routes} transitions={true} transitionDuration={300}>
-    <NotFound />
-  </RouterProvider>
-  ```
 
 ## Solución de problemas comunes
 
