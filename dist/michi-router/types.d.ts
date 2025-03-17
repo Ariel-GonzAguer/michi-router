@@ -20,7 +20,7 @@ export interface RouterProviderProps {
         children: React.ReactNode;
     }>;
 }
-export interface LinkProps {
+export interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
     to: string;
     children: ReactNode;
     className?: string;
