@@ -18,9 +18,10 @@ El objetivo principal de esta herramienta es proporcionar la funcionalidad bási
 npm install @arielgonzaguer/michi-router
 ```
 
-## Usage
+## Uso básico
 
 ```jsx
+// src/App.jsx //
 import { RouterProvider, Link } from "@arielgonzaguer/michi-router";
 
 // puede crear rutas en un archivo separado o en el mismo archivo
@@ -37,8 +38,10 @@ function App() {
     </RouterProvider>
   );
 }
+```
 
-// Usando Link
+### Usando Link
+```jsx
 function NavigationComponent() {
   return (
     <nav>
@@ -47,11 +50,75 @@ function NavigationComponent() {
     </nav>
   );
 }
+```
 
-// Usando useNavigate
+### Navegación programática (Hook useNavigate)
+```jsx
 function NavigateButton() {
   const navigate = useNavigate();
   return <button onClick={() => navigate("/about")}>Ir a About</button>;
+}
+```
+
+### Organización de rutas en archivos separados
+
+Para aplicaciones más grandes, puedes organizar tus rutas en archivos separados:
+
+```jsx
+// routes.js
+import Home from './pages/Home';
+import About from './pages/About';
+import Products from './pages/Products';
+import NotFound from './pages/NotFound';
+
+export const routes = [
+  { path: "/", component: <Home /> },
+  { path: "/about", component: <About /> },
+  { path: "/products", component: <Products /> },
+];
+
+export const notFoundPage = <NotFound />;
+```
+
+```jsx
+// App.jsx
+import { RouterProvider } from "@arielgonzaguer/michi-router";
+import { routes, notFoundPage } from './routes';
+
+function App() {
+  return (
+    <RouterProvider routes={routes}>
+      {notFoundPage}
+    </RouterProvider>
+  );
+}
+```
+
+### Integración con sistemas de autenticación
+
+```jsx
+import { RouterProvider } from "@arielgonzaguer/michi-router";
+import { useAuth } from "./auth-context";
+
+function App() {
+  const { isAuthenticated } = useAuth();
+  
+  // Definimos rutas condicionalmente basadas en autenticación
+  const routes = [
+    { path: "/", component: <Home /> },
+    { path: "/login", component: <Login /> },
+    // Solo agregamos estas rutas si el usuario está autenticado
+    ...(isAuthenticated ? [
+      { path: "/profile", component: <Profile /> },
+      { path: "/admin", component: <Admin /> }
+    ] : [])
+  ];
+  
+  return (
+    <RouterProvider routes={routes}>
+      <div>404: Page not found</div>
+    </RouterProvider>
+  );
 }
 ```
 
@@ -126,6 +193,7 @@ Hook para navegación programática.
 ## Próximas características
 
 - [ ] Soporte para rutas anidadas.
+
   ```jsx
   const routes = [
     {
@@ -138,6 +206,7 @@ Hook para navegación programática.
     },
   ];
   ```
+
 - [ ] Transiciones entre rutas.
   ```jsx
   <RouterProvider routes={routes} transitions={true} transitionDuration={300}>
@@ -148,7 +217,3 @@ Hook para navegación programática.
 ## Licencia
 
 MIT
-
-```
-
-```
