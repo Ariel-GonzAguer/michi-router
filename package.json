@@ -2,7 +2,7 @@
   "name": "@arielgonzaguer/michi-router",
   "private": false,
   "version": "1.0.3",
-  "description": "The minimalist and simple router for React",
+  "description": "El router minimalista y simple para React.\nEl objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -20,7 +20,8 @@
     "router",
     "typescript",
     "michi",
-    "cats"
+    "cats",
+    "gatos"
   ],
   "peerDependencies": {
     "react": ">=16.8.0",
