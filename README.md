@@ -1,16 +1,25 @@
 # Michi Router
 
+![npm version](https://img.shields.io/npm/v/@arielgonzaguer/michi-router)
+![bundle size](https://img.shields.io/bundlephobia/minzip/@arielgonzaguer/michi-router)
+![license](https://img.shields.io/npm/l/@arielgonzaguer/michi-router)
+
 El router minimalista y simple para React.
 El objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.
 
 ## Características
 
-- Es idea para proyectos pequeños o que solo necesitan una funcionalidad básica de enrutamiento.
+- Es ideal para proyectos pequeños o que solo necesitan una funcionalidad básica de enrutamiento.
 - No requiere de ninguna configuración adicional.
 - No requiere de ninguna dependencia externa.
-- Es compatible con React 16.8 y versiones posteriores.
 - Creado con TypeScript.
-- Ultra ligero. Menos de 15kb (más ligero y básico que otras librerías).
+- Ultra ligero. Menos de 20kb (más ligero y básico que otras librerías).
+
+## Compatibilidad
+
+- React 16.8+.
+- Funciona con proyectos creados con Create React App, Vite, Next.js, etc.
+- Totalmente tipado con TypeScript.
 
 ## Installation
 
@@ -41,6 +50,8 @@ function App() {
 ```
 
 ### Usando Link
+
+#### Usando el componente Link solo con prop to
 ```jsx
 function NavigationComponent() {
   return (
@@ -52,8 +63,26 @@ function NavigationComponent() {
 }
 ```
 
-### Navegación programática (Hook useNavigate)
+#### Usando el componente Link con todas las props
 ```jsx
+<Link 
+  to="/contact" 
+  className="nav-link" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  aria-label="Contacto"
+>
+  Contacto
+</Link>
+```
+
+
+
+### Navegación programática (Hook useNavigate)
+
+```jsx
+import { useNavigate } from "@arielgonzaguer/michi-router";
+
 function NavigateButton() {
   const navigate = useNavigate();
   return <button onClick={() => navigate("/about")}>Ir a About</button>;
@@ -66,10 +95,10 @@ Para aplicaciones más grandes, puedes organizar tus rutas en archivos separados
 
 ```jsx
 // routes.js
-import Home from './pages/Home';
-import About from './pages/About';
-import Products from './pages/Products';
-import NotFound from './pages/NotFound';
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Products from "./pages/Products";
+import NotFound from "./pages/NotFound";
 
 export const routes = [
   { path: "/", component: <Home /> },
@@ -83,14 +112,10 @@ export const notFoundPage = <NotFound />;
 ```jsx
 // App.jsx
 import { RouterProvider } from "@arielgonzaguer/michi-router";
-import { routes, notFoundPage } from './routes';
+import { routes, notFoundPage } from "./routes";
 
 function App() {
-  return (
-    <RouterProvider routes={routes}>
-      {notFoundPage}
-    </RouterProvider>
-  );
+  return <RouterProvider routes={routes}>{notFoundPage}</RouterProvider>;
 }
 ```
 
@@ -102,18 +127,20 @@ import { useAuth } from "./auth-context";
 
 function App() {
   const { isAuthenticated } = useAuth();
-  
+
   // Definimos rutas condicionalmente basadas en autenticación
   const routes = [
     { path: "/", component: <Home /> },
     { path: "/login", component: <Login /> },
     // Solo agregamos estas rutas si el usuario está autenticado
-    ...(isAuthenticated ? [
-      { path: "/profile", component: <Profile /> },
-      { path: "/admin", component: <Admin /> }
-    ] : [])
+    ...(isAuthenticated
+      ? [
+          { path: "/profile", component: <Profile /> },
+          { path: "/admin", component: <Admin /> },
+        ]
+      : []),
   ];
-  
+
   return (
     <RouterProvider routes={routes}>
       <div>404: Page not found</div>
@@ -168,9 +195,9 @@ Componente principal para el enrutamiento.
 
 **Props:**
 
-- `routes`: Array de objetos con `path` y `component`
-- `children`: Elemento a mostrar cuando no hay ruta coincidente
-- `layout`: Componente opcional que funciona como layout general para todas las rutas
+- `routes`: Array de objetos con `path` y `component`.
+- `children`: Elemento a mostrar cuando no hay ruta coincidente.
+- `layout`: Componente opcional que funciona como layout general para todas las rutas.
 
 ### `<Link>`
 
@@ -178,9 +205,10 @@ Componente para navegación declarativa.
 
 **Props:**
 
-- `to`: Ruta destino
-- `children`: Contenido del enlace
-- `className`: Clases CSS opcionales
+- `to`: Ruta destino.
+- `children`: Contenido del enlace.
+- `className`: Clases CSS opcionales.
+- `...rest`: Cualquier otra prop válida para elementos `<a>` de HTML.
 
 ### `useNavigate()`
 
@@ -188,7 +216,7 @@ Hook para navegación programática.
 
 **Retorna:**
 
-- Función navigate que acepta la ruta como parámetro
+- Función navigate que acepta la ruta como parámetro.
 
 ## Próximas características
 
@@ -208,11 +236,41 @@ Hook para navegación programática.
   ```
 
 - [ ] Transiciones entre rutas.
+
   ```jsx
   <RouterProvider routes={routes} transitions={true} transitionDuration={300}>
     <NotFound />
   </RouterProvider>
   ```
+
+## Solución de problemas comunes
+
+### El componente no se renderiza después de navegar
+
+Asegúrate de que la ruta en el array `routes` coincida exactamente con la URL, incluyendo barras diagonales.
+
+### Errores con TypeScript
+
+Si estás usando TypeScript, asegúrate de importar los tipos correctamente:
+
+```typescript
+import {
+  RouterProvider,
+  Link,
+  useNavigate,
+} from "@arielgonzaguer/michi-router";
+import type { RouterProviderProps } from "@arielgonzaguer/michi-router";
+```
+
+## Contribuir
+
+Las contribuciones son bienvenidas. Por favor, sigue estos pasos:
+
+1. Fork el repositorio.
+2. Crea una rama para tu feature (`git checkout -b feature/amazing-feature`).
+3. Haz commit de tus cambios (`git commit -m 'Add some amazing feature'`).
+4. Push a la rama (`git push origin feature/amazing-feature`).
+5. Abre un Pull Request.
 
 ## Licencia
 
