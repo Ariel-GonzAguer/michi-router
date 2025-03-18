@@ -9,7 +9,7 @@
 
 Las versiones 1.1.x publicadas antes del 18/marzo/2025 están rotas, contienen errores y han sido eliminadas.
 La versión estable es la 1.2.1.
-Si tienes alguna de estas versiones instaladas (1.1.x), actualízala a la versión 1.2.0 ejecutando el siguiente comando:
+Si tienes alguna de estas versiones instaladas (1.1.x), actualízala a la versión 1.2.1 ejecutando el siguiente comando:
 ```bash
 npm install @arielgonzaguer/michi-router@latest
 ```
