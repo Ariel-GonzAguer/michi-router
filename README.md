@@ -13,12 +13,11 @@ El objetivo principal de esta herramienta es proporcionar la funcionalidad bási
 - No requiere de ninguna configuración adicional.
 - No requiere de ninguna dependencia externa.
 - Creado con TypeScript.
-- Ultra ligero. Menos de 20kb (más ligero y básico que otras librerías).
 
 ## Compatibilidad
 
 - React 16.8+.
-- Funciona con proyectos creados con Create React App, Vite, Next.js, etc.
+- Funciona con proyectos creados con Vite.
 - Totalmente tipado con TypeScript.
 
 ## Installation
@@ -29,9 +28,9 @@ npm install @arielgonzaguer/michi-router
 
 ## Uso básico
 
-```jsx
+```tsx
 // src/App.jsx //
-import { RouterProvider, Link } from "@arielgonzaguer/michi-router";
+import { RouterProvider } from "@arielgonzaguer/michi-router";
 
 // puede crear rutas en un archivo separado o en el mismo archivo
 const routes = [
@@ -52,7 +51,10 @@ function App() {
 ### Usando Link
 
 #### Usando el componente Link solo con prop to
-```jsx
+
+```tsx
+import { Link } from "@arielgonzaguer/michi-router";
+
 function NavigationComponent() {
   return (
     <nav>
@@ -64,11 +66,12 @@ function NavigationComponent() {
 ```
 
 #### Usando el componente Link con todas las props
-```jsx
-<Link 
-  to="/contact" 
-  className="nav-link" 
-  target="_blank" 
+
+```tsx
+<Link
+  to="/contact"
+  className="nav-link"
+  target="_blank"
   rel="noopener noreferrer"
   aria-label="Contacto"
 >
@@ -76,25 +79,25 @@ function NavigationComponent() {
 </Link>
 ```
 
-
-
 ### Navegación programática (Hook useNavigate)
 
-```jsx
+```tsx
 import { useNavigate } from "@arielgonzaguer/michi-router";
 
 function NavigateButton() {
   const navigate = useNavigate();
-  return <button onClick={() => navigate("/about")}>Ir a About</button>;
+  return;
+  <button onClick={() => navigate("/gatos")}>Ir a Gatos</button>;
 }
 ```
 
 ### Organización de rutas en archivos separados
 
-Para aplicaciones más grandes, puedes organizar tus rutas en archivos separados:
+Puede organizar sus rutas en archivos separados.
+Primero cree un archivo con las rutas:
 
-```jsx
-// routes.js
+```tsx
+// routes.tsx
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Products from "./pages/Products";
@@ -109,8 +112,10 @@ export const routes = [
 export const notFoundPage = <NotFound />;
 ```
 
-```jsx
-// App.jsx
+Después utilice este archivo en su componente que maneja el enrutado:
+
+```tsx
+// App.tsx
 import { RouterProvider } from "@arielgonzaguer/michi-router";
 import { routes, notFoundPage } from "./routes";
 
@@ -119,31 +124,90 @@ function App() {
 }
 ```
 
-### Integración con sistemas de autenticación
+### Protección de rutas
 
-```jsx
+Si necesita que sus rutas se mantengan protegidas, puede usar un componente que cumpla este propósito, como el siguiente:
+
+```tsx
+// Protected.tsx
+import { useEffect } from "react";
+import { useNavigate } from "@arielgonzaguer/michi-router";
+import useAuthStore from "../store/useAuthStore"; // esta sería la store que maneja la autenticacación en su proyecto
+import { ReactNode } from "react"; // tipado
+
+export default function Protected({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login"); // si no hay usuario autenticado en la store, redirige al login
+    }
+  }, [user, navigate]);
+
+  return user ? children : null; // Devuelve los hijos solo si la persona usuaria está autenticada
+}
+```
+
+Después, puede usar ese componente en el archivo dónde maneja sus rutas:
+
+```tsx
+// MichiRouter.tsx
 import { RouterProvider } from "@arielgonzaguer/michi-router";
-import { useAuth } from "./auth-context";
+import Home from "../pages/Home";
+import ActualizarGatos from "../pages/ActualizarGatos";
+import VerGatos from "../pages/VerGatos";
+import AgregarGatos from "../pages/AgregarGatos";
+import NotFoud404 from "../components/NotFound404";
+import Index from "../pages/Index";
 
-function App() {
-  const { isAuthenticated } = useAuth();
+// protección de rutas
+import Protected from "./Protected";
 
-  // Definimos rutas condicionalmente basadas en autenticación
-  const routes = [
-    { path: "/", component: <Home /> },
-    { path: "/login", component: <Login /> },
-    // Solo agregamos estas rutas si el usuario está autenticado
-    ...(isAuthenticated
-      ? [
-          { path: "/profile", component: <Profile /> },
-          { path: "/admin", component: <Admin /> },
-        ]
-      : []),
-  ];
+// layout
+import BaseLayout from "../layouts/BaseLayout";
 
+const rutas = [
+  { path: "/", component: <Home /> },
+  // encapsule los componente a elegir dentro de <Protected>
+  {
+    path: "/index",
+    component: (
+      <Protected>
+        <Index />
+      </Protected>
+    ),
+  },
+  {
+    path: "/actualizar-gatos",
+    component: (
+      <Protected>
+        <ActualizarGatos />
+      </Protected>
+    ),
+  },
+  {
+    path: "/ver-gatos",
+    component: (
+      <Protected>
+        <VerGatos />{" "}
+      </Protected>
+    ),
+  },
+  {
+    path: "/agregar-gatos",
+    component: (
+      <Protected>
+        <AgregarGatos />
+      </Protected>
+    ),
+  },
+];
+
+export default function MichiRouter() {
   return (
-    <RouterProvider routes={routes}>
-      <div>404: Page not found</div>
+    <RouterProvider routes={rutas} layout={BaseLayout}>
+      <NotFoud404 />
     </RouterProvider>
   );
 }
@@ -151,15 +215,15 @@ function App() {
 
 ### Usando un Layout General
 
-Puedes aplicar un layout común a todas tus rutas:
+Puede aplicar un layout común a todas tus rutas:
 
-```jsx
+```tsx
 import { RouterProvider } from "@arielgonzaguer/michi-router";
 import MainLayout from "./layouts/MainLayout";
 
 const routes = [
   { path: "/", component: <Home /> },
-  { path: "/about", component: <About /> },
+  { path: "/felinos-ferales", component: <Ferales /> },
 ];
 
 function App() {
@@ -177,7 +241,7 @@ function MainLayout({ children }) {
       <header>
         <nav>
           <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
+          <Link to="/felinos-ferales">Ferales</Link>
         </nav>
       </header>
       <main>{children}</main>
@@ -220,21 +284,6 @@ Hook para navegación programática.
 
 ## Próximas características
 
-- [ ] Soporte para rutas anidadas.
-
-  ```jsx
-  const routes = [
-    {
-      path: "/dashboard",
-      component: <Dashboard />,
-      children: [
-        { path: "/users", component: <Users /> },
-        { path: "/settings", component: <Settings /> },
-      ],
-    },
-  ];
-  ```
-
 - [ ] Transiciones entre rutas.
 
   ```jsx
@@ -247,20 +296,8 @@ Hook para navegación programática.
 
 ### El componente no se renderiza después de navegar
 
-Asegúrate de que la ruta en el array `routes` coincida exactamente con la URL, incluyendo barras diagonales.
+Asegúrese de que la ruta en el array `routes` coincida exactamente con la URL, incluyendo barras diagonales.
 
-### Errores con TypeScript
-
-Si estás usando TypeScript, asegúrate de importar los tipos correctamente:
-
-```typescript
-import {
-  RouterProvider,
-  Link,
-  useNavigate,
-} from "@arielgonzaguer/michi-router";
-import type { RouterProviderProps } from "@arielgonzaguer/michi-router";
-```
 
 ## Contribuir
 
