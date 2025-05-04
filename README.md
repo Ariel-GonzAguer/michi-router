@@ -4,8 +4,24 @@
 ![bundle size](https://img.shields.io/bundlephobia/minzip/@arielgonzaguer/michi-router)
 ![license](https://img.shields.io/npm/l/@arielgonzaguer/michi-router)
 
+
+# ¡IMPORTANTE!
+
+Las versiones 1.1.x publicadas antes del 18/marzo/2025 están rotas, contienen errores y han sido eliminadas.
+La versión estable es la 1.2.2.
+Si tienes alguna de estas versiones instaladas (1.1.x), actualízala a la versión 1.2.2 ejecutando el siguiente comando:
+```bash
+npm install @arielgonzaguer/michi-router@latest
+```
+
+
+Gracias por su comprensión 😸
+
+# Michi Router
+
 El router minimalista y simple para React.
 El objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.
+
 
 ## Características
 
@@ -20,7 +36,7 @@ El objetivo principal de esta herramienta es proporcionar la funcionalidad bási
 - Funciona con proyectos creados con Vite.
 - Totalmente tipado con TypeScript.
 
-## Installation
+## Instalación
 
 ```bash
 npm install @arielgonzaguer/michi-router
