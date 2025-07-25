@@ -5,6 +5,9 @@
 ![license](https://img.shields.io/npm/l/@arielgonzaguer/michi-router)
 
 
+![Logo de MichiRouter](./public/michiRouter_LOGO.png)
+
+
 # ¡IMPORTANTE!
 
 Las versiones 1.1.x publicadas antes del 18/marzo/2025 están rotas, contienen errores y han sido eliminadas.
