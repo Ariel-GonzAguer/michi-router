@@ -13,26 +13,26 @@ vitest_1.vi.mock('../Michi-router', function () { return ({
     useNavigate: function () { return mockNavigate; },
 }); });
 var Protected_1 = __importDefault(require("../Protected"));
-describe('Protected component', function () {
+(0, vitest_1.describe)('Protected component', function () {
     beforeEach(function () {
         mockNavigate.mockClear();
     });
-    it('muestra loadingComponent cuando isLoading true', function () {
+    (0, vitest_1.it)('muestra loadingComponent cuando isLoading true', function () {
         var auth = { user: null, isLoading: true };
         (0, react_2.render)(react_1.default.createElement(Protected_1.default, { configObject: { states: auth, loadingComponent: react_1.default.createElement("div", null, "Loading..."), redirectionPath: '/' } },
             react_1.default.createElement("div", null, "Private")));
-        expect(react_2.screen.getByText('Loading...')).toBeDefined();
+        (0, vitest_1.expect)(react_2.screen.getByText('Loading...')).toBeDefined();
     });
-    it('redirige cuando isLoading false y no hay user', function () {
+    (0, vitest_1.it)('redirige cuando isLoading false y no hay user', function () {
         var auth = { user: null, isLoading: false };
         (0, react_2.render)(react_1.default.createElement(Protected_1.default, { configObject: { states: auth, redirectionPath: '/login' } },
             react_1.default.createElement("div", null, "Private")));
-        expect(mockNavigate).toHaveBeenCalledWith('/login');
+        (0, vitest_1.expect)(mockNavigate).toHaveBeenCalledWith('/login');
     });
-    it('renderiza los hijos cuando hay user', function () {
+    (0, vitest_1.it)('renderiza los hijos cuando hay user', function () {
         var auth = { user: { name: 'A' }, isLoading: false };
         (0, react_2.render)(react_1.default.createElement(Protected_1.default, { configObject: { states: auth, redirectionPath: '/' } },
             react_1.default.createElement("div", null, "PrivateContent")));
-        expect(react_2.screen.getByText('PrivateContent')).toBeDefined();
+        (0, vitest_1.expect)(react_2.screen.getByText('PrivateContent')).toBeDefined();
     });
 });
