@@ -25,3 +25,15 @@ export interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorEle
     children: ReactNode;
     className?: string;
 }
+export interface ProtectedProps {
+    children: JSX.Element;
+    configObject: {
+        states: {
+            user: any;
+            isLoading: boolean;
+        };
+        redirectionPath: string;
+        loadingComponent?: ReactNode;
+        defaultMessage?: boolean;
+    };
+}

@@ -1,2 +1,3 @@
+export type { Route, RouterContextType, RouterProviderProps, LinkProps, LayoutProps, ProtectedProps } from './types';
 export { RouterProvider, Link, useNavigate } from './Michi-router';
-export type { Route, RouterContextType, RouterProviderProps, LinkProps, LayoutProps } from './types';
+export { default as Protected } from './Protected';
