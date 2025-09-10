@@ -141,16 +141,16 @@ Uso básico:
 
 `configObject` (props requeridas/permitidas):
 
-- `states` (obligatorio): objeto con `{ user: any, isLoading: boolean }`. Por ejemplo el valor retornado por un hook de autenticación (Zustand, Redux, Context, etc.).
-- `redirectionPath` (obligatorio): ruta destino cuando no hay usuario autenticado. Por defecto `/`.
-- `loadingComponent` (opcional): componente React a mostrar mientras `isLoading` es `true`.
-- `defaultMessage` (opcional): boolean. Si `true` muestra `Cargando...` cuando `isLoading` es `true` y no se ha provisto `loadingComponent`.
+- `states` (obligatorio): <Record<string, any>> objeto con `{ user: any, isLoading: boolean }`. Por ejemplo el valor retornado por un hook de autenticación (Zustand, Redux, Context, etc.).
+- `redirectionPath` (obligatorio): <string> ruta destino cuando no hay usuario autenticado. Por defecto `/`.
+- `loadingComponent` (opcional): <JSX.Element> componente React a mostrar mientras `isLoading` es `true`.
+- `defaultMessage` (opcional): <boolean> si `true` muestra `Cargando...` cuando `isLoading` es `true` y no se ha provisto `loadingComponent`. Si `false` o no se proporciona, retorna `null`.
 
 Ejemplo con Zustand:
 
 ```tsx
-import Protected from '@arielgonzaguer/michi-router/Protected';
-import useAuthStore from '../store/useAuthStore';
+import Protected from "@arielgonzaguer/michi-router/Protected";
+import useAuthStore from "../store/useAuthStore";
 
 function PrivateRoute() {
   const { user, isLoading } = useAuthStore();
@@ -159,7 +159,7 @@ function PrivateRoute() {
     <Protected
       configObject={{
         states: { user, isLoading },
-        redirectionPath: '/login',
+        redirectionPath: "/login",
         loadingComponent: <div>Cargando...</div>,
       }}
     >
@@ -185,30 +185,35 @@ import Home from "../paginas/Home.jsx";
 import Notas from "../paginas/Notas.jsx";
 // ...otros componentes
 
-const routes = [
-  { path: "/", component: <Home /> },
-  {
-    path: "/login",
-    component: <Login />,
-  },
-  {
-    path: "/notas",
-    component: (
-      <Protected
-        configObject={{
-          states: useAuthStore(),
-          redirectionPath: "/login",
-          loadingComponent: <div>Cargando...</div>,
-        }}
-      >
-        <Notas />
-      </Protected>
-    ),
-  },
-  // ...otras rutas
-];
-
 export default function MichiRouter() {
+  const configObject = {
+    states: useAuthStore(),
+    redirectionPath: '/',
+    loadingComponent: (
+      <div className="w-full h-screen flex items-center justify-center">Cargando...</div>
+    ),
+    defaultMessage: false,
+  };
+
+  const routes = [
+    { path: "/", component: <Home /> },
+    {
+      path: "/login",
+      component: <Login />,
+    },
+    {
+      path: "/notas",
+      component: (
+        <Protected
+          configObject={configObject}
+        >
+          <Notas />
+        </Protected>
+      ),
+    },
+    // ...otras rutas
+  ];
+
   return (
     <RouterProvider routes={rutas} layout={BaseLayout}>
       <NotFoud404 />
