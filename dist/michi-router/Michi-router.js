@@ -10,29 +10,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -46,7 +23,8 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RouterContext = exports.useNavigate = exports.Link = exports.RouterProvider = void 0;
-var react_1 = __importStar(require("react"));
+var jsx_runtime_1 = require("react/jsx-runtime");
+var react_1 = require("react");
 // Creación del contexto con un valor inicial
 var RouterContext = (0, react_1.createContext)({
     path: window.location.pathname,
@@ -77,11 +55,11 @@ function RouterProvider(_a) {
     var currentRoute = routes.find(function (route) { return route.path === path; });
     var routeContent = currentRoute ? currentRoute.component : children;
     try {
-        return (react_1.default.createElement(RouterContext.Provider, { value: { path: path, navigate: navigate } }, Layout ? (react_1.default.createElement(Layout, null, routeContent)) : (routeContent)));
+        return ((0, jsx_runtime_1.jsx)(RouterContext.Provider, __assign({ value: { path: path, navigate: navigate } }, { children: Layout ? ((0, jsx_runtime_1.jsx)(Layout, { children: routeContent })) : (routeContent) })));
     }
     catch (error) {
         console.error('Error en RouterProvider:', error);
-        return react_1.default.createElement("div", null, "Error en el enrutador. Consulta la consola para m\u00E1s detalles.");
+        return (0, jsx_runtime_1.jsx)("div", { children: "Error en el enrutador. Consulta la consola para m\u00E1s detalles." });
     }
 }
 exports.RouterProvider = RouterProvider;
@@ -92,10 +70,10 @@ exports.RouterProvider = RouterProvider;
 var Link = function (_a) {
     var to = _a.to, children = _a.children, className = _a.className, rest = __rest(_a, ["to", "children", "className"]);
     var navigate = (0, react_1.useContext)(RouterContext).navigate;
-    return (react_1.default.createElement("a", __assign({ href: to, className: className, onClick: function (e) {
+    return ((0, jsx_runtime_1.jsx)("a", __assign({ href: to, className: className, onClick: function (e) {
             e.preventDefault();
             navigate(to);
-        } }, rest), children));
+        } }, rest, { children: children })));
 };
 exports.Link = Link;
 /**
