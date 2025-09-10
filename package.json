@@ -1,7 +1,7 @@
 {
   "name": "@arielgonzaguer/michi-router",
   "private": false,
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "El router minimalista y simple para React.\nEl objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,9 +13,12 @@
     "prepare": "npm run build",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "vitest",
+    "test:watch": "vitest --watch"
   },
   "keywords": [
+    "enrutado",
     "react",
     "router",
     "typescript",
@@ -28,13 +31,18 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "rimraf": "^6.0.1",
-    "typescript": "^4.9.5"
+    "@testing-library/jest-dom": "6.0.0",
+    "@testing-library/react": "14.0.0",
+    "@types/jest": "29.5.3",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "jsdom": "26.1.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "rimraf": "6.0.1",
+    "typescript": "4.9.5",
+    "vitest": "3.2.4"
   },
-  "author": "Ariel González Agüero",
+  "author": "Ariel Gonzales Agüero",
   "license": "MIT"
 }

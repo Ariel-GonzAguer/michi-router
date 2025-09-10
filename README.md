@@ -4,32 +4,16 @@
 ![bundle size](https://img.shields.io/bundlephobia/minzip/@arielgonzaguer/michi-router)
 ![license](https://img.shields.io/npm/l/@arielgonzaguer/michi-router)
 
-
 ![Logo de MichiRouter](./public/michiRouter_LOGO.png)
-
-
-# ¡IMPORTANTE!
-
-Las versiones 1.1.x publicadas antes del 18/marzo/2025 están rotas, contienen errores y han sido eliminadas.
-La versión estable es la 1.2.2.
-Si tienes alguna de estas versiones instaladas (1.1.x), actualízala a la versión 1.2.2 ejecutando el siguiente comando:
-```bash
-npm install @arielgonzaguer/michi-router@latest
-```
-
-
-Gracias por su comprensión 😸
 
 # Michi Router
 
 El router minimalista y simple para React.
 El objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.
 
-
 ## Características
 
 - Es ideal para proyectos pequeños o que solo necesitan una funcionalidad básica de enrutamiento.
-- No requiere de ninguna configuración adicional.
 - No requiere de ninguna dependencia externa.
 - Creado con TypeScript.
 
@@ -145,82 +129,83 @@ function App() {
 
 ### Protección de rutas
 
-Si necesita que sus rutas se mantengan protegidas, puede usar un componente que cumpla este propósito, como el siguiente:
+El paquete incluye el componente `<Protected>` para restringir el acceso a contenido según el estado de autenticación.
+
+Uso básico:
 
 ```tsx
-// Protected.tsx
-import { useEffect } from "react";
-import { useNavigate } from "@arielgonzaguer/michi-router";
-import useAuthStore from "../store/useAuthStore"; // esta sería la store que maneja la autenticacación en su proyecto
-import { ReactNode } from "react"; // tipado
+<Protected configObject={configObject}>
+  <PrivateComponent />
+</Protected>
+```
 
-export default function Protected({ children }: { children: ReactNode }) {
-  const navigate = useNavigate();
-  const { user } = useAuthStore();
+`configObject` (props requeridas/permitidas):
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/login"); // si no hay usuario autenticado en la store, redirige al login
-    }
-  }, [user, navigate]);
+- `states` (obligatorio): objeto con `{ user: any, isLoading: boolean }`. Por ejemplo el valor retornado por un hook de autenticación (Zustand, Redux, Context, etc.).
+- `redirectionPath` (obligatorio): ruta destino cuando no hay usuario autenticado. Por defecto `/`.
+- `loadingComponent` (opcional): componente React a mostrar mientras `isLoading` es `true`.
+- `defaultMessage` (opcional): boolean. Si `true` muestra `Cargando...` cuando `isLoading` es `true` y no se ha provisto `loadingComponent`.
 
-  return user ? children : null; // Devuelve los hijos solo si la persona usuaria está autenticada
+Ejemplo con Zustand:
+
+```tsx
+import Protected from '@arielgonzaguer/michi-router/Protected';
+import useAuthStore from '../store/useAuthStore';
+
+function PrivateRoute() {
+  const { user, isLoading } = useAuthStore();
+
+  return (
+    <Protected
+      configObject={{
+        states: { user, isLoading },
+        redirectionPath: '/login',
+        loadingComponent: <div>Cargando...</div>,
+      }}
+    >
+      <Notas />
+    </Protected>
+  );
 }
 ```
 
-Después, puede usar ese componente en el archivo dónde maneja sus rutas:
+### Ejemplo de uso del componente Protected:
 
 ```tsx
-// MichiRouter.tsx
-import { RouterProvider } from "@arielgonzaguer/michi-router";
-import Home from "../pages/Home";
-import ActualizarGatos from "../pages/ActualizarGatos";
-import VerGatos from "../pages/VerGatos";
-import AgregarGatos from "../pages/AgregarGatos";
-import NotFoud404 from "../components/NotFound404";
-import Index from "../pages/Index";
+// routes.tsx
 
-// protección de rutas
-import Protected from "./Protected";
+// ...otros imports
+import {
+  Protected,
+  RouterProvider as MichiProvider,
+} from "@arielgonzaguer/michi-router";
+import useAuthStore from "../store/useAuthStore"; // la store que maneja autenticación
+import Login from "../paginas/Login.jsx";
+import Home from "../paginas/Home.jsx";
+import Notas from "../paginas/Notas.jsx";
+// ...otros componentes
 
-// layout
-import BaseLayout from "../layouts/BaseLayout";
-
-const rutas = [
+const routes = [
   { path: "/", component: <Home /> },
-  // encapsule los componente a elegir dentro de <Protected>
   {
-    path: "/index",
+    path: "/login",
+    component: <Login />,
+  },
+  {
+    path: "/notas",
     component: (
-      <Protected>
-        <Index />
+      <Protected
+        configObject={{
+          states: useAuthStore(),
+          redirectionPath: "/login",
+          loadingComponent: <div>Cargando...</div>,
+        }}
+      >
+        <Notas />
       </Protected>
     ),
   },
-  {
-    path: "/actualizar-gatos",
-    component: (
-      <Protected>
-        <ActualizarGatos />
-      </Protected>
-    ),
-  },
-  {
-    path: "/ver-gatos",
-    component: (
-      <Protected>
-        <VerGatos />{" "}
-      </Protected>
-    ),
-  },
-  {
-    path: "/agregar-gatos",
-    component: (
-      <Protected>
-        <AgregarGatos />
-      </Protected>
-    ),
-  },
+  // ...otras rutas
 ];
 
 export default function MichiRouter() {
@@ -237,23 +222,9 @@ export default function MichiRouter() {
 Puede aplicar un layout común a todas tus rutas:
 
 ```tsx
-import { RouterProvider } from "@arielgonzaguer/michi-router";
-import MainLayout from "./layouts/MainLayout";
+import { RouterProvider, Link } from "@arielgonzaguer/michi-router";
 
-const routes = [
-  { path: "/", component: <Home /> },
-  { path: "/felinos-ferales", component: <Ferales /> },
-];
-
-function App() {
-  return (
-    <RouterProvider routes={routes} layout={MainLayout}>
-      <div>404: Page not found</div>
-    </RouterProvider>
-  );
-}
-
-// Ejemplo de un componente Layout
+// ejemplo de un componente Layout
 function MainLayout({ children }) {
   return (
     <div className="layout">
@@ -266,6 +237,20 @@ function MainLayout({ children }) {
       <main>{children}</main>
       <footer>Michi-router 😸</footer>
     </div>
+  );
+}
+
+// definición de rutas
+const routes = [
+  { path: "/", component: <Home /> },
+  { path: "/felinos-ferales", component: <Ferales /> },
+];
+
+function App() {
+  return (
+    <RouterProvider routes={routes} layout={MainLayout}>
+      <div>404: Page not found</div>
+    </RouterProvider>
   );
 }
 ```
@@ -311,12 +296,25 @@ Hook para navegación programática.
   </RouterProvider>
   ```
 
+### `<Protected>`
+
+Componente para proteger rutas.
+
+**Props:**
+
+- `children`: Elemento a proteger.
+- `configObject`: Objeto de configuración para el componente.
+
+  - `states`: obligatorio. Objeto con `{ user: any, isLoading: boolean }`.
+  - `redirectionPath`: obligatorio. Ruta a redirigir si no hay usuario.
+  - `loadingComponent`: opcional. Componente a mostrar mientras `isLoading` es true.
+  - `defaultMessage`: opcional. Si es true, muestra "Cargando..." por defecto mientras `isLoading` es true. Si es false o no se proporciona, retorna `null` mientras `isLoading` es true.
+
 ## Solución de problemas comunes
 
 ### El componente no se renderiza después de navegar
 
 Asegúrese de que la ruta en el array `routes` coincida exactamente con la URL, incluyendo barras diagonales.
-
 
 ## Contribuir
 
