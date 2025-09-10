@@ -3,7 +3,7 @@
     "target": "es5",
     "module": "commonjs",
     "lib": ["dom", "es2015"],
-    "jsx": "react",
+  "jsx": "react-jsx",
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
@@ -11,6 +11,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "src/michi-router/__tests__"],
+  "exclude": ["node_modules", "dist", "**/__tests__/**", "**/*.test.*"]
 }
