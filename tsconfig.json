@@ -12,5 +12,6 @@
     "skipLibCheck": true
   },
   "include": ["src", "src/michi-router/__tests__"],
-  "exclude": ["node_modules", "dist", "**/__tests__/**", "**/*.test.*"]
+    "exclude": ["node_modules", "dist", "src/setupTests.ts", "**/__tests__/**", "**/*.test.*"]
+
 }
