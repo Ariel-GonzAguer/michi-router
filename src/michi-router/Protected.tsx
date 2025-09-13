@@ -15,15 +15,32 @@ import { ProtectedProps } from "./types";
 export default function Protected({ children, configObject }: ProtectedProps): JSX.Element | null {
   const navigate = useNavigate();
 
-  const config = {
+  /**
+   * Objeto de configuración para el manejo de rutas protegidas.
+   *
+   * @property {Object} states - Contiene el estado actual del usuario y el estado de carga.
+   * @property {any} states.user - El objeto o valor del usuario actual.
+   * @property {boolean} states.isLoading - Indica si el proceso de autenticación/carga está en curso.
+   * @property {string} redirectionPath - Ruta a la que se redirige si el usuario no está autenticado.
+   * @property {React.ReactNode} [loadingComponent] - Componente personalizado opcional para mostrar mientras carga.
+   * @property {string} [defaultMessage] - Mensaje por defecto a mostrar si no se provee loadingComponent. Si no se provee ningún mensaje, no se muestra nada.
+   */
+  const config: {
+    states: { user: any; isLoading: boolean };
+    redirectionPath: string;
+    loadingComponent?: React.ReactNode;
+    defaultMessage?: string;
+  } = {
     states: configObject?.states || null,
     redirectionPath: configObject?.redirectionPath || "/",
     loadingComponent: configObject?.loadingComponent || null,
-  defaultMessage: configObject?.defaultMessage ?? true, // Mensaje por defecto si no se provee loadingComponent
+    defaultMessage: configObject?.defaultMessage || undefined,
   };
 
   if (!config.states) {
-    console.error("Protected component: 'states' is required in configObject.");
+    console.error(
+      "Componente Protected: El objeto de configuración es inválido. Este es el formato esperado:\n{\n  states: { user: any; isLoading: boolean };\n  redirectionPath: string;\n  loadingComponent?: React.ReactNode;\n  defaultMessage?: string;\n}"
+    );
     return null;
   }
   // Leemos el estado directamente desde el store
@@ -39,7 +56,7 @@ export default function Protected({ children, configObject }: ProtectedProps): J
   // Mientras carga, mostrar loadingComponent si está definido, si no y defaultMessage true mostrar texto
   if (isLoading) {
     if (config.loadingComponent) return config.loadingComponent as JSX.Element;
-    return config.defaultMessage ? <div>Cargando...</div> : null;
+    return config.defaultMessage ? <div>{config.defaultMessage}</div> : null;
   }
 
   return user ? children : null;
