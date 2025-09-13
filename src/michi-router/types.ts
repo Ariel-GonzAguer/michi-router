@@ -36,6 +36,6 @@ export interface ProtectedProps {
     states: { user: any; isLoading: boolean };
     redirectionPath: string;
     loadingComponent?: ReactNode;
-    defaultMessage?: boolean;
+    defaultMessage?: string | undefined;
   };
 }
