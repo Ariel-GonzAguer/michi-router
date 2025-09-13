@@ -15,7 +15,8 @@
     "prebuild": "npm run clean",
     "prepublishOnly": "npm run build",
     "test": "vitest",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "build:bundle": "tsup src/index.ts --format esm,cjs --minify --dts --out-dir dist --external react --external react-dom"
   },
   "keywords": [
     "enrutado",
@@ -31,6 +32,7 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
+    "@swc/core": "1.13.5",
     "@testing-library/jest-dom": "6.0.0",
     "@testing-library/react": "14.0.0",
     "@types/jest": "29.5.3",
@@ -40,6 +42,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "rimraf": "6.0.1",
+    "tsup": "8.5.0",
     "typescript": "4.9.5",
     "vitest": "3.2.4"
   },
