@@ -10,18 +10,12 @@
 
 El router minimalista y simple para React.
 El objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.
-
-## Características
-
-- Es ideal para proyectos pequeños o que solo necesitan una funcionalidad básica de enrutamiento.
-- No requiere de ninguna dependencia externa.
-- Creado con TypeScript.
+No requiere de ninguna dependencia externa, ideal para proyectos pequeños.
+Creado con TypeScript.
 
 ## Compatibilidad
 
-- React 16.8+.
-- Funciona con proyectos creados con Vite.
-- Totalmente tipado con TypeScript.
+- React 17+
 
 ## Instalación
 
