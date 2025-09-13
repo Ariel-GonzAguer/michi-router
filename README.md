@@ -4,7 +4,7 @@
 ![bundle size](https://img.shields.io/bundlephobia/minzip/@arielgonzaguer/michi-router)
 ![license](https://img.shields.io/npm/l/@arielgonzaguer/michi-router)
 
-![Logo de MichiRouter](./public/michiRouter_LOGO.png)
+![Logo de MichiRouter](https://cdn.jsdelivr.net/gh/Ariel-GonzAguer/michi-router@main/public/michiRouter_LOGO.png)
 
 # Michi Router
 
