@@ -1,9 +1,20 @@
 import React, { useCallback, createContext, useContext, useState, useEffect } from 'react';
 import type { RouterContextType, RouterProviderProps, LinkProps } from './types';
 
+// Verificar si estamos en el navegador (no en SSR)
+const isBrowser = typeof window !== 'undefined';
+
+// Función helper para obtener la ruta actual de forma segura
+const getCurrentPath = () => {
+  if (isBrowser) {
+    return window.location.pathname;
+  }
+  return '/'; // Ruta por defecto para SSR
+};
+
 // Creación del contexto con un valor inicial
 const RouterContext = createContext<RouterContextType>({
-  path: window.location.pathname,
+  path: getCurrentPath(),
   navigate: () => {
     console.warn('RouterContext usado fuera de RouterProvider');
   }
@@ -16,15 +27,29 @@ const RouterContext = createContext<RouterContextType>({
  * @param layout - Componente de layout opcional para envolver todas las rutas
  */
 export function RouterProvider({ routes, children, layout: Layout }: RouterProviderProps) {
-  const [path, setPath] = useState(window.location.pathname);
+  const [path, setPath] = useState(getCurrentPath());
 
   useEffect(() => {
+    if (!isBrowser) return; // No hacer nada en SSR
+    
     const handlePopState = () => setPath(window.location.pathname);
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const navigate = useCallback((to: string) => {
+    if (!isBrowser) {
+      // En SSR, solo actualizar el estado local
+      setPath(to);
+      return;
+    }
+    
+    // Validación básica de la URL para prevenir navegación a URLs maliciosas
+    if (typeof to !== 'string' || to.includes('javascript:') || to.includes('data:')) {
+      console.warn('MichiRouter: URL potencialmente insegura bloqueada:', to);
+      return;
+    }
+    
     window.history.pushState({}, '', to);
     setPath(to);
   }, []);

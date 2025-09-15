@@ -27,17 +27,19 @@ interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 
     children: ReactNode;
     className?: string;
 }
-interface ProtectedProps {
+interface AuthState<TUser = any> {
+    user: TUser | null;
+    isLoading: boolean;
+}
+interface ProtectedConfig<TUser = any> {
+    states: AuthState<TUser>;
+    redirectionPath: string;
+    loadingComponent?: ReactNode;
+    defaultMessage?: string;
+}
+interface ProtectedProps<TUser = any> {
     children: JSX.Element;
-    configObject: {
-        states: {
-            user: any;
-            isLoading: boolean;
-        };
-        redirectionPath: string;
-        loadingComponent?: ReactNode;
-        defaultMessage?: string | undefined;
-    };
+    configObject: ProtectedConfig<TUser>;
 }
 
 /**
@@ -68,6 +70,6 @@ declare const useNavigate: () => (to: string) => void;
  * @param {React.ReactNode} props.children - Los nodos React a renderizar si el usuario está autenticado.
  * @returns {JSX.Element|null} Los hijos si está autenticado, de lo contrario loader.
  */
-declare function Protected({ children, configObject }: ProtectedProps): JSX.Element | null;
+declare function Protected<TUser = any>({ children, configObject }: ProtectedProps<TUser>): JSX.Element | null;
 
 export { type LayoutProps, Link, type LinkProps, Protected, type ProtectedProps, type Route, type RouterContextType, RouterProvider, type RouterProviderProps, useNavigate };
