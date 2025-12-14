@@ -6,21 +6,23 @@
 
 ![Logo de MichiRouter](https://cdn.jsdelivr.net/gh/Ariel-GonzAguer/michi-router@main/public/michiRouter_LOGO.png)
 
-# Michi Router
-
 El router minimalista y simple para React.
 El objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.
 No requiere de ninguna dependencia externa, ideal para proyectos pequeños.
 Creado con TypeScript.
 
-## Compatibilidad
+## Características
 
-- React 17+
+- **Minimalista**: Solo las funcionalidades esenciales de enrutamiento
+- **TypeScript**: Completamente tipado para mejor experiencia de desarrollo
+- **Zero dependencias**: No requiere librerías externas
+- **Liviano**: Bundle pequeño y optimizado
+- **Componente Protected**: Control de acceso integrado
+- **SSR Compatible**: Funciona con Next.js y otras soluciones SSR
 
 ## Instalación
 
 ```bash
 npm install @arielgonzaguer/michi-router
 ```
-
-Visite la [Documentación oficial](https://michirouter.vercel.app/) para más detalles.
+Para ver la documentación completa, visite [la página de documentación](https://michirouter.vercel.app/).

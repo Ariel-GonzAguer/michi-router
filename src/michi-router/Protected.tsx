@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "./Michi-router";
-import { ProtectedProps } from "./types";
+import { ProtectedProps, ProtectedConfig } from "./types";
 
 /**
  * Un componente que restringe el acceso a sus hijos según el estado de autenticación del usuario.
@@ -12,7 +12,7 @@ import { ProtectedProps } from "./types";
  * @param {React.ReactNode} props.children - Los nodos React a renderizar si el usuario está autenticado.
  * @returns {JSX.Element|null} Los hijos si está autenticado, de lo contrario loader.
  */
-export default function Protected({ children, configObject }: ProtectedProps): JSX.Element | null {
+export default function Protected<TUser = any>({ children, configObject }: ProtectedProps<TUser>): JSX.Element | null {
   const navigate = useNavigate();
 
   /**
@@ -23,26 +23,23 @@ export default function Protected({ children, configObject }: ProtectedProps): J
    * @property {boolean} states.isLoading - Indica si el proceso de autenticación/carga está en curso.
    * @property {string} redirectionPath - Ruta a la que se redirige si el usuario no está autenticado.
    * @property {React.ReactNode} [loadingComponent] - Componente personalizado opcional para mostrar mientras carga.
-   * @property {string} [defaultMessage] - Mensaje por defecto a mostrar si no se provee loadingComponent. Si no se provee ningún mensaje, no se muestra nada.
+   * @property {string} [defaultMessage] - Mensaje por defecto a mostrar si no se provee loadingComponent. 
+   *                                      NOTA: En React Native, se recomienda usar loadingComponent en lugar de defaultMessage.
    */
-  const config: {
-    states: { user: any; isLoading: boolean };
-    redirectionPath: string;
-    loadingComponent?: React.ReactNode;
-    defaultMessage?: string;
-  } = {
-    states: configObject?.states || null,
+  const config: ProtectedConfig<TUser> = {
+    states: configObject?.states || { user: null, isLoading: false },
     redirectionPath: configObject?.redirectionPath || "/",
     loadingComponent: configObject?.loadingComponent || null,
     defaultMessage: configObject?.defaultMessage || undefined,
   };
 
-  if (!config.states) {
+  if (!configObject?.states) {
     console.error(
       "Componente Protected: El objeto de configuración es inválido. Este es el formato esperado:\n{\n  states: { user: any; isLoading: boolean };\n  redirectionPath: string;\n  loadingComponent?: React.ReactNode;\n  defaultMessage?: string;\n}"
     );
     return null;
   }
+  
   // Leemos el estado directamente desde el store
   const { user, isLoading } = config.states;
 
@@ -56,7 +53,8 @@ export default function Protected({ children, configObject }: ProtectedProps): J
   // Mientras carga, mostrar loadingComponent si está definido, si no y defaultMessage true mostrar texto
   if (isLoading) {
     if (config.loadingComponent) return config.loadingComponent as JSX.Element;
-    return config.defaultMessage ? <div>{config.defaultMessage}</div> : null;
+    // Usar Fragment en lugar de div para compatibilidad con React Native
+    return config.defaultMessage ? <>{config.defaultMessage}</> : null;
   }
 
   return user ? children : null;

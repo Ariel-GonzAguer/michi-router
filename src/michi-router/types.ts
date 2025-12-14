@@ -29,13 +29,22 @@ export interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorEle
   className?: string;
 }
 
-// Protected component props
-export interface ProtectedProps {
+// Mejorado: Tipos más específicos para el estado de autenticación
+export interface AuthState<TUser = any> {
+  user: TUser | null;
+  isLoading: boolean;
+}
+
+// Mejorado: Configuración más tipada para el componente Protected
+export interface ProtectedConfig<TUser = any> {
+  states: AuthState<TUser>;
+  redirectionPath: string;
+  loadingComponent?: ReactNode;
+  defaultMessage?: string;
+}
+
+// Protected component props con mejor tipado
+export interface ProtectedProps<TUser = any> {
   children: JSX.Element;
-  configObject: {
-    states: { user: any; isLoading: boolean };
-    redirectionPath: string;
-    loadingComponent?: ReactNode;
-    defaultMessage?: string | undefined;
-  };
+  configObject: ProtectedConfig<TUser>;
 }
