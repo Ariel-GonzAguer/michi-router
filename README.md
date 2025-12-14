@@ -11,16 +11,16 @@ El objetivo principal de esta herramienta es proporcionar la funcionalidad bási
 No requiere de ninguna dependencia externa, ideal para proyectos pequeños.
 Creado con TypeScript.
 
-## 🚀 Características
+## Características
 
-- ✅ **Minimalista**: Solo las funcionalidades esenciales de enrutamiento
-- ✅ **TypeScript**: Completamente tipado para mejor experiencia de desarrollo
-- ✅ **Zero dependencias**: No requiere librerías externas
-- ✅ **Liviano**: Bundle pequeño y optimizado
-- ✅ **Componente Protected**: Control de acceso integrado
-- ✅ **SSR Compatible**: Funciona con Next.js y otras soluciones SSR
+- **Minimalista**: Solo las funcionalidades esenciales de enrutamiento
+- **TypeScript**: Completamente tipado para mejor experiencia de desarrollo
+- **Zero dependencias**: No requiere librerías externas
+- **Liviano**: Bundle pequeño y optimizado
+- **Componente Protected**: Control de acceso integrado
+- **SSR Compatible**: Funciona con Next.js y otras soluciones SSR
 
-## 📦 Instalación
+## Instalación
 
 ```bash
 npm install @arielgonzaguer/michi-router
