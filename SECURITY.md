@@ -2,7 +2,7 @@
 
 Este documento describe las medidas de seguridad implementadas en Michi Router y las mejores prácticas recomendadas para su uso.
 
-## 🛡️ Medidas de Seguridad Implementadas
+## Medidas de Seguridad Implementadas
 
 ### 1. Protección contra URLs Maliciosas
 
@@ -13,11 +13,11 @@ El router incluye validaciones automáticas para prevenir navegación a URLs pot
 - **Validación de tipos**: Solo acepta strings como parámetros de navegación
 
 ```typescript
-// ❌ Estas URLs son bloqueadas automáticamente
+// Estas URLs son bloqueadas automáticamente
 navigate('javascript:alert("XSS")');
 navigate('data:text/html,<script>alert("XSS")</script>');
 
-// ✅ Estas URLs son permitidas
+// Estas URLs son permitidas
 navigate('/dashboard');
 navigate('/user/123');
 navigate('https://external-site.com');
@@ -41,7 +41,7 @@ navigate('https://external-site.com');
 - **Manejo seguro de estados**: No expone información sensible en errores
 - **Redirección controlada**: Solo permite redirecciones a rutas válidas
 
-## 🔐 Mejores Prácticas de Seguridad
+## Mejores Prácticas de Seguridad
 
 ### 1. Validación de Rutas
 
@@ -60,7 +60,7 @@ function validateRoute(route: string): boolean {
 Usa el componente `Protected` con validaciones robustas:
 
 ```typescript
-// ✅ Buena práctica
+// Buena práctica
 <Protected 
   configObject={{
     states: { 
@@ -105,7 +105,7 @@ function sanitizeUrl(url: string): string {
 }
 ```
 
-## 🚨 Reportar Vulnerabilidades
+## Reportar Vulnerabilidades
 
 Si encuentras una vulnerabilidad de seguridad, por favor:
 
@@ -117,16 +117,16 @@ Si encuentras una vulnerabilidad de seguridad, por favor:
    - Impacto potencial
    - Versión afectada
 
-## 📝 Auditorías de Seguridad
+## Auditorías de Seguridad
 
-- **Última auditoría**: Enero 2024
+- **Última auditoría**: 14/diciembre/2025
 - **Herramientas utilizadas**: 
   - `npm audit`
   - Análisis estático de código
   - Pruebas de penetración básicas
 - **Estado**: Sin vulnerabilidades conocidas
 
-## 🔄 Actualizaciones de Seguridad
+## Actualizaciones de Seguridad
 
 - Mantén siempre la versión más reciente
 - Suscríbete a las notificaciones de GitHub para updates de seguridad
