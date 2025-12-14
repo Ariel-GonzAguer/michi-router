@@ -16,7 +16,6 @@
     "prepare": "npm run build:bundle",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "prepublishOnly": "npm run build:bundle",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "build:bundle": "tsup src/index.ts --format esm,cjs --minify --dts --out-dir dist --external react --external react-dom"
