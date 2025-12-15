@@ -18,7 +18,6 @@ Creado con TypeScript.
 - **Zero dependencias**: No requiere librerías externas
 - **Liviano**: Bundle pequeño y optimizado
 - **Componente Protected**: Control de acceso integrado
-- **SSR Compatible**: Funciona con Next.js y otras soluciones SSR
 
 ## Instalación
 
