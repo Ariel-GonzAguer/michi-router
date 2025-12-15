@@ -23,11 +23,11 @@ navigate('/user/123');
 navigate('https://external-site.com');
 ```
 
-### 2. Compatibilidad con SSR (Server-Side Rendering)
+### 2. Seguridad en el Navegador
 
 - **Detección automática de entorno**: Verifica si `window` está disponible
-- **Inicialización segura**: Proporciona valores por defecto seguros para SSR
-- **Prevención de errores**: No intenta acceder a APIs del navegador en el servidor
+- **Inicialización segura**: Proporciona valores por defecto seguros
+- **Prevención de errores**: No intenta acceder a APIs del navegador innecesariamente
 
 ### 3. Prevención de XSS
 

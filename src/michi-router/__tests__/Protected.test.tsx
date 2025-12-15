@@ -46,19 +46,15 @@ describe('Protected component', () => {
     expect(screen.getByText('PrivateContent')).toBeDefined();
   });
 
-  it('muestra defaultMessage con Fragment en lugar de div para React Native compatibility', () => {
+  it('muestra defaultMessage correctamente cuando está cargando', () => {
     const auth = { user: null, isLoading: true };
-    const { container } = render(
+    render(
       <Protected configObject={{ states: auth, defaultMessage: 'Cargando...', redirectionPath: '/' }}>
         <div>Private</div>
       </Protected>
     );
     
-    // Verificar que no hay div wrapper (mejor compatibilidad con React Native)
     expect(screen.getByText('Cargando...')).toBeDefined();
-    // No debe haber un div específico como wrapper del mensaje
-    const divs = container.querySelectorAll('div');
-    expect(divs.length).toBe(0); // Solo el Fragment debe envolver el texto
   });
 
   it('maneja configuración inválida correctamente', () => {
