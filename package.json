@@ -18,7 +18,11 @@
     "prebuild": "npm run clean",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "build:bundle": "tsup src/index.ts --format esm,cjs --minify --dts --out-dir dist --external react --external react-dom"
+    "build:bundle": "tsup src/index.ts --format esm,cjs --minify --dts --out-dir dist --external react --external react-dom",
+    "prebublish": "npm run build:bundle && npm test",
+    "release:patch": "npm version patch && npm publish --access public && git push origin main --tags",
+    "release:minor": "npm version minor && npm publish --access public && git push origin main --tags",
+    "release:major": "npm version major && npm publish --access public && git push origin main --tags"
   },
   "keywords": [
     "enrutado",
