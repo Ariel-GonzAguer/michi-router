@@ -23,8 +23,7 @@ export default function Protected<TUser = any>({ children, configObject }: Prote
    * @property {boolean} states.isLoading - Indica si el proceso de autenticación/carga está en curso.
    * @property {string} redirectionPath - Ruta a la que se redirige si el usuario no está autenticado.
    * @property {React.ReactNode} [loadingComponent] - Componente personalizado opcional para mostrar mientras carga.
-   * @property {string} [defaultMessage] - Mensaje por defecto a mostrar si no se provee loadingComponent. 
-   *                                      NOTA: En React Native, se recomienda usar loadingComponent en lugar de defaultMessage.
+   * @property {string} [defaultMessage] - Mensaje por defecto a mostrar si no se provee loadingComponent.
    */
   const config: ProtectedConfig<TUser> = {
     states: configObject?.states || { user: null, isLoading: false },
@@ -53,7 +52,6 @@ export default function Protected<TUser = any>({ children, configObject }: Prote
   // Mientras carga, mostrar loadingComponent si está definido, si no y defaultMessage true mostrar texto
   if (isLoading) {
     if (config.loadingComponent) return config.loadingComponent as JSX.Element;
-    // Usar Fragment en lugar de div para compatibilidad con React Native
     return config.defaultMessage ? <>{config.defaultMessage}</> : null;
   }
 

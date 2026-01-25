@@ -1,7 +1,7 @@
 import React, { useCallback, createContext, useContext, useState, useEffect } from 'react';
 import type { RouterContextType, RouterProviderProps, LinkProps } from './types';
 
-// Verificar si estamos en el navegador (no en SSR)
+// Verificar si estamos en el navegador
 const isBrowser = typeof window !== 'undefined';
 
 // Función helper para obtener la ruta actual de forma segura
@@ -9,7 +9,7 @@ const getCurrentPath = () => {
   if (isBrowser) {
     return window.location.pathname;
   }
-  return '/'; // Ruta por defecto para SSR
+  return '/';
 };
 
 // Creación del contexto con un valor inicial
@@ -30,7 +30,7 @@ export function RouterProvider({ routes, children, layout: Layout }: RouterProvi
   const [path, setPath] = useState(getCurrentPath());
 
   useEffect(() => {
-    if (!isBrowser) return; // No hacer nada en SSR
+    if (!isBrowser) return;
     
     const handlePopState = () => setPath(window.location.pathname);
     window.addEventListener('popstate', handlePopState);
@@ -39,7 +39,6 @@ export function RouterProvider({ routes, children, layout: Layout }: RouterProvi
 
   const navigate = useCallback((to: string) => {
     if (!isBrowser) {
-      // En SSR, solo actualizar el estado local
       setPath(to);
       return;
     }
