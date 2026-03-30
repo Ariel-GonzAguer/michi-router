@@ -16,7 +16,7 @@
     "prepare": "pnpm run build:bundle",
     "clean": "rimraf dist",
     "prebuild": "pnpm run clean",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:watch": "vitest --watch",
     "build:bundle": "tsup src/index.ts --format esm,cjs --minify --dts --out-dir dist --external react --external react-dom",
     "prepublish": "pnpm run build:bundle && pnpm test",
