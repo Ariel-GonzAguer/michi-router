@@ -1,7 +1,7 @@
 {
   "name": "@arielgonzaguer/michi-router",
   "private": false,
-  "version": "2.2.3",
+  "version": "2.2.2",
   "description": "El router minimalista y simple para React.\nEl objetivo principal de esta herramienta es proporcionar la funcionalidad básica de enrutamiento.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,7 +19,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "build:bundle": "tsup src/index.ts --format esm,cjs --minify --dts --out-dir dist --external react --external react-dom",
-    "prebublish": "pnpm run build:bundle && pnpm test",
+    "prepublish": "pnpm run build:bundle && pnpm test",
     "release:patch": "pnpm version patch && pnpm publish --access public && git push origin main --tags",
     "release:minor": "pnpm version minor && pnpm publish --access public && git push origin main --tags",
     "release:major": "pnpm version major && pnpm publish --access public && git push origin main --tags"
