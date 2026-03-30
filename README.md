@@ -22,9 +22,7 @@ Creado con TypeScript.
 ## Instalación
 
 ```bash
-pnpm add @arielgonzaguer/michi-router
+npm install @arielgonzaguer/michi-router
 ```
-
-(o con npm/yarn si lo prefiere)
 
 Para ver la documentación completa, visite [la página de documentación](https://michirouter.vercel.app/).
