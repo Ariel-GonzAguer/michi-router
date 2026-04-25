@@ -33,7 +33,7 @@ describe('Protected component', () => {
         <div>Private</div>
       </Protected>
     );
-    expect(mockNavigate).toHaveBeenCalledWith('/login');
+    expect(mockNavigate).toHaveBeenCalledWith('/login', { replace: true });
   });
 
   it('renderiza los hijos cuando hay user', () => {
@@ -77,5 +77,23 @@ describe('Protected component', () => {
     );
     
     consoleSpy.mockRestore();
+  });
+
+  it('bloquea redirección insegura en Protected', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const auth = { user: null, isLoading: false };
+
+    render(
+      <Protected configObject={{ states: auth, redirectionPath: 'javascript:alert(1)' }}>
+        <div>Private</div>
+      </Protected>
+    );
+
+    expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Protected: redirectionPath inseguro bloqueado')
+    );
+
+    warnSpy.mockRestore();
   });
 });

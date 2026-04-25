@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "./Michi-router";
 import { ProtectedProps, ProtectedConfig } from "./types";
+import { resolveInternalPath } from './path-utils';
 
 /**
  * Un componente que restringe el acceso a sus hijos según el estado de autenticación del usuario.
@@ -12,7 +13,15 @@ import { ProtectedProps, ProtectedConfig } from "./types";
  * @param {React.ReactNode} props.children - Los nodos React a renderizar si el usuario está autenticado.
  * @returns {JSX.Element|null} Los hijos si está autenticado, de lo contrario loader.
  */
-export default function Protected<TUser = any>({ children, configObject }: ProtectedProps<TUser>): JSX.Element | null {
+const getSafeRedirectionPath = (path: string): string => {
+  const resolved = resolveInternalPath(path, '/');
+  return resolved ? resolved.fullPath : '/';
+};
+
+export default function Protected<TUser = unknown>({
+  children,
+  configObject
+}: ProtectedProps<TUser>): React.ReactElement | null {
   const navigate = useNavigate();
 
   /**
@@ -29,7 +38,7 @@ export default function Protected<TUser = any>({ children, configObject }: Prote
     states: configObject?.states || { user: null, isLoading: false },
     redirectionPath: configObject?.redirectionPath || "/",
     loadingComponent: configObject?.loadingComponent || null,
-    defaultMessage: configObject?.defaultMessage || undefined,
+    defaultMessage: configObject?.defaultMessage || undefined
   };
 
   if (!configObject?.states) {
@@ -39,21 +48,25 @@ export default function Protected<TUser = any>({ children, configObject }: Prote
     return null;
   }
   
-  // Leemos el estado directamente desde el store
+  const safeRedirectionPath = getSafeRedirectionPath(config.redirectionPath);
+
   const { user, isLoading } = config.states;
 
   useEffect(() => {
-    // Redirigir solo cuando haya terminado de cargar y el usuario NO esté autenticado
     if (!isLoading && !user) {
-      navigate(config.redirectionPath);
+      if (safeRedirectionPath !== config.redirectionPath) {
+        console.warn(
+          `Protected: redirectionPath inseguro bloqueado ("${config.redirectionPath}"). Se usa "/" como fallback.`
+        );
+      }
+      navigate(safeRedirectionPath, { replace: true });
     }
-  }, [isLoading, user, navigate, config.redirectionPath]);
+  }, [isLoading, user, navigate, safeRedirectionPath, config.redirectionPath]);
 
-  // Mientras carga, mostrar loadingComponent si está definido, si no y defaultMessage true mostrar texto
   if (isLoading) {
-    if (config.loadingComponent) return config.loadingComponent as JSX.Element;
+    if (config.loadingComponent) return <>{config.loadingComponent}</>;
     return config.defaultMessage ? <>{config.defaultMessage}</> : null;
   }
 
-  return user ? children : null;
+  return user ? <>{children}</> : null;
 }

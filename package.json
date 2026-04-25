@@ -6,10 +6,26 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.mjs",
+      "require": "./dist/core.js"
+    },
+    "./protected": {
+      "types": "./dist/protected.d.ts",
+      "import": "./dist/protected.mjs",
+      "require": "./dist/protected.js"
+    }
+  },
+  "sideEffects": false,
   "files": [
-    "dist/index.mjs",
-    "dist/index.js",
-    "dist/index.d.ts"
+    "dist"
   ],
   "scripts": {
     "build": "tsc",
@@ -18,8 +34,9 @@
     "prebuild": "npm run clean",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
-    "build:bundle": "tsup src/index.ts --format esm,cjs --minify --dts --out-dir dist --external react --external react-dom",
-    "prepublish": "npm run build:bundle && npm test",
+    "build:bundle": "npm run clean && tsup src/index.ts src/core.ts src/protected.ts --format esm,cjs --minify --dts --out-dir dist --external react --splitting false",
+    "size:check": "node scripts/check-size.js",
+    "prepublish": "npm run build:bundle && npm test && npm run size:check",
     "release:patch": "npm version patch && npm publish --access public && git push origin main --tags",
     "release:minor": "npm version minor && npm publish --access public && git push origin main --tags",
     "release:major": "npm version major && npm publish --access public && git push origin main --tags"
@@ -35,8 +52,7 @@
     "front-end"
   ],
   "peerDependencies": {
-    "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react": ">=17.0.0"
   },
   "devDependencies": {
     "@swc/core": "1.13.5",
@@ -53,6 +69,14 @@
     "typescript": "4.9.5",
     "vitest": "3.2.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ariel-GonzAguer/michi-router.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ariel-GonzAguer/michi-router/issues"
+  },
+  "homepage": "https://github.com/Ariel-GonzAguer/michi-router#readme",
   "author": "Ariel Gonzales Agüero",
   "license": "MIT"
 }
