@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "esnext",
+    "module": "node16",
     "lib": ["dom", "es2020"],
     "jsx": "react-jsx",
     "declaration": true,
+    "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "esModuleInterop": true,
     "skipLibCheck": true
   },

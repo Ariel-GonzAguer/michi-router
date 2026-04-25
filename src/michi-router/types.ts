@@ -1,8 +1,24 @@
-import { ReactNode } from "react";
+import type { AnchorHTMLAttributes, ComponentType, ReactNode } from 'react';
 
 export interface LayoutProps {
   children: ReactNode;
 }
+
+export type RouteParams = Record<string, string>;
+
+export interface RouterLocation {
+  pathname: string;
+  search: string;
+  hash: string;
+  fullPath: string;
+}
+
+export interface NavigateOptions {
+  replace?: boolean;
+  state?: unknown;
+}
+
+export type NavigateFn = (to: string, options?: NavigateOptions) => void;
 
 export interface Route {
   path: string;
@@ -11,40 +27,39 @@ export interface Route {
 
 export interface RouterContextType {
   path: string;
-  navigate: (to: string) => void;
+  location: RouterLocation;
+  params: RouteParams;
+  basename: string;
+  navigate: NavigateFn;
 }
 
 export interface RouterProviderProps {
-  routes: Array<{
-    path: string;
-    component: React.ReactNode;
-  }>;
-  children?: React.ReactNode;
-  layout?: React.ComponentType<{ children: React.ReactNode }>;
+  routes: Route[];
+  children?: ReactNode;
+  notFound?: ReactNode;
+  basename?: string;
+  layout?: ComponentType<{ children: ReactNode }>;
 }
 
-export interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
+export interface LinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   to: string;
   children: ReactNode;
   className?: string;
 }
 
-// Mejorado: Tipos más específicos para el estado de autenticación
-export interface AuthState<TUser = any> {
+export interface AuthState<TUser = unknown> {
   user: TUser | null;
   isLoading: boolean;
 }
 
-// Mejorado: Configuración más tipada para el componente Protected
-export interface ProtectedConfig<TUser = any> {
+export interface ProtectedConfig<TUser = unknown> {
   states: AuthState<TUser>;
   redirectionPath: string;
   loadingComponent?: ReactNode;
   defaultMessage?: string;
 }
 
-// Protected component props con mejor tipado
-export interface ProtectedProps<TUser = any> {
-  children: JSX.Element;
+export interface ProtectedProps<TUser = unknown> {
+  children: ReactNode;
   configObject: ProtectedConfig<TUser>;
 }

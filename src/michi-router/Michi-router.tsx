@@ -1,111 +1,154 @@
-import React, { useCallback, createContext, useContext, useState, useEffect } from 'react';
-import type { RouterContextType, RouterProviderProps, LinkProps } from './types';
+import React, { useCallback, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import type {
+  LinkProps,
+  NavigateFn,
+  RouteParams,
+  RouterContextType,
+  RouterLocation,
+  RouterProviderProps,
+} from './types';
+import { matchRoutePath, normalizeBasename, normalizePathname, resolveInternalPath } from './path-utils';
 
-// Verificar si estamos en el navegador
 const isBrowser = typeof window !== 'undefined';
 
-// Función helper para obtener la ruta actual de forma segura
-const getCurrentPath = () => {
-  if (isBrowser) {
-    return window.location.pathname;
-  }
-  return '/';
+const DEFAULT_LOCATION: RouterLocation = {
+  pathname: '/',
+  search: '',
+  hash: '',
+  fullPath: '/',
 };
 
-// Creación del contexto con un valor inicial
+const getCurrentLocation = (basename: string): RouterLocation => {
+  if (!isBrowser) return DEFAULT_LOCATION;
+
+  const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  const resolved = resolveInternalPath(currentPath, basename);
+
+  if (resolved) {
+    return {
+      pathname: resolved.pathname,
+      search: resolved.search,
+      hash: resolved.hash,
+      fullPath: resolved.fullPath,
+    };
+  }
+
+  const fallbackPath = normalizePathname(window.location.pathname);
+  return {
+    pathname: fallbackPath,
+    search: window.location.search,
+    hash: window.location.hash,
+    fullPath: `${fallbackPath}${window.location.search}${window.location.hash}`,
+  };
+};
+
 const RouterContext = createContext<RouterContextType>({
-  path: getCurrentPath(),
+  path: '/',
+  location: DEFAULT_LOCATION,
+  params: {},
+  basename: '/',
   navigate: () => {
     console.warn('RouterContext usado fuera de RouterProvider');
-  }
+  },
 });
 
-/**
- * Proveedor principal del enrutador.
- * @param routes - Array de rutas disponibles
- * @param children - Contenido a mostrar cuando no hay coincidencia de ruta (404)
- * @param layout - Componente de layout opcional para envolver todas las rutas
- */
-export function RouterProvider({ routes, children, layout: Layout }: RouterProviderProps) {
-  const [path, setPath] = useState(getCurrentPath());
+export function RouterProvider({ routes, children, notFound, basename, layout: Layout }: RouterProviderProps) {
+  const normalizedBasename = useMemo(() => normalizeBasename(basename), [basename]);
+  const [location, setLocation] = useState<RouterLocation>(() => getCurrentLocation(normalizedBasename));
 
   useEffect(() => {
     if (!isBrowser) return;
-    
-    const handlePopState = () => setPath(window.location.pathname);
+
+    const handlePopState = () => setLocation(getCurrentLocation(normalizedBasename));
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [normalizedBasename]);
 
-  const navigate = useCallback((to: string) => {
-    if (!isBrowser) {
-      setPath(to);
-      return;
+  const navigate = useCallback<NavigateFn>(
+    (to, options) => {
+      const resolved = resolveInternalPath(to, normalizedBasename);
+      if (!resolved) {
+        console.warn(`MichiRouter: navegación bloqueada. URL interna no válida: "${to}"`);
+        return;
+      }
+
+      const nextLocation: RouterLocation = {
+        pathname: resolved.pathname,
+        search: resolved.search,
+        hash: resolved.hash,
+        fullPath: resolved.fullPath,
+      };
+
+      if (!isBrowser) {
+        setLocation(nextLocation);
+        return;
+      }
+
+      if (options?.replace) {
+        window.history.replaceState(options?.state ?? null, '', resolved.browserPath);
+      } else {
+        window.history.pushState(options?.state ?? null, '', resolved.browserPath);
+      }
+
+      setLocation(nextLocation);
+    },
+    [normalizedBasename]
+  );
+
+  const matchedRoute = useMemo(() => {
+    for (const route of routes) {
+      const params = matchRoutePath(route.path, location.pathname);
+      if (params) {
+        return { route, params };
+      }
     }
-    
-    // Validación básica de la URL para prevenir navegación a URLs maliciosas
-    if (typeof to !== 'string' || to.includes('javascript:') || to.includes('data:')) {
-      console.warn('MichiRouter: URL potencialmente insegura bloqueada:', to);
-      return;
-    }
-    
-    window.history.pushState({}, '', to);
-    setPath(to);
-  }, []);
+    return null;
+  }, [location.pathname, routes]);
 
-  // Encontrar la ruta actual
-  const currentRoute = routes.find(route => route.path === path);
-  const routeContent = currentRoute ? currentRoute.component : children;
+  const params: RouteParams = matchedRoute?.params ?? {};
+  const routeContent = matchedRoute ? matchedRoute.route.component : notFound ?? children;
 
-  try {
-    return (
-      <RouterContext.Provider value={{ path, navigate }}>
-        {Layout ? (
-          <Layout>
-            {routeContent}
-          </Layout>
-        ) : (
-          routeContent
-        )}
-      </RouterContext.Provider>
-    );
-  } catch (error) {
-    console.error('Error en RouterProvider:', error);
-    return <div>Error en el enrutador. Consulta la consola para más detalles.</div>;
-  }
-
+  return (
+    <RouterContext.Provider
+      value={{
+        path: location.pathname,
+        location,
+        params,
+        basename: normalizedBasename,
+        navigate,
+      }}
+    >
+      {Layout ? <Layout>{routeContent}</Layout> : routeContent}
+    </RouterContext.Provider>
+  );
 }
 
-/**
- * Componente Link para navegación declarativa.
- * Previene la recarga de página y utiliza el historial del navegador.
- */
-export const Link = ({ to, children, className, ...rest }: LinkProps & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  const { navigate } = useContext(RouterContext);
+export const Link = ({ to, children, className, onClick, ...rest }: LinkProps) => {
+  const { navigate, basename } = useContext(RouterContext);
+  const resolved = resolveInternalPath(to, basename);
+  const href = resolved ? resolved.browserPath : '#';
 
   return (
     <a
-      href={to}
+      href={href}
       className={className}
-      onClick={(e) => {
+      onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+        onClick?.(e);
+        if (e.defaultPrevented) return;
         e.preventDefault();
         navigate(to);
       }}
-      {...rest} // se puede agregar más props si es necesario
+      {...rest}
     >
       {children}
     </a>
   );
 };
 
-/**
- * Hook para acceder a la función de navegación programática.
- * @returns Función navigate que permite cambiar de ruta
- */
-export const useNavigate = () => {
-  const { navigate } = useContext(RouterContext);
-  return navigate;
-};
+export const useNavigate = (): NavigateFn => useContext(RouterContext).navigate;
 
-// Exportamos el contexto para que pueda ser usado por otros componentes si es necesario
+export const useLocation = (): RouterLocation => useContext(RouterContext).location;
+
+export const useParams = <T extends RouteParams = RouteParams>(): T => useContext(RouterContext).params as T;
+
 export { RouterContext };
