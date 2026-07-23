@@ -74,4 +74,4 @@ export default function App() {
 - `@arielgonzaguer/michi-router/core`: router base sin `Protected`.
 - `@arielgonzaguer/michi-router/protected`: export del componente `Protected`.
 
-Documentación: [https://michirouter.vercel.app/](https://michirouter.vercel.app/)
+[Documentación 😸](https://michirouter.netlify.app/)
