@@ -6,23 +6,30 @@
 
 ![Logo de MichiRouter](https://cdn.jsdelivr.net/gh/Ariel-GonzAguer/michi-router@main/public/michiRouter_LOGO.png)
 
-Router minimalista para React, enfocado en tamaño, DX y seguridad para navegación interna del lado del cliente.
+Router minimalista para React, enfocado en tamano, DX y seguridad para navegacion interna del lado del cliente.
 
-## Características
+## Caracteristicas
 
-- **Ligero**: pensado para mantenerse pequeño.
+- **Ligero**: pensado para mantenerse pequeno.
 - **TypeScript first**: API completamente tipada.
 - **Zero dependencias de runtime**.
-- **Rutas dinámicas**: soporte para `:params` y wildcard `*`.
+- **Rutas dinamicas**: soporte para `:params` y wildcard `*`.
 - **Hooks**: `useNavigate`, `useLocation`, `useParams`.
-- **Basename**: útil para apps bajo subrutas (`/app`).
+- **Basename**: util para apps bajo subrutas (`/app`).
 - **Componente `Protected`** opcional.
-- **Navegación segura interna**: bloquea protocolos inseguros y destinos externos.
+- **Navegacion segura interna**: bloquea protocolos inseguros y destinos externos.
 
 ## Instalación
 
 ```bash
+# pnpm (recomendado)
+pnpm add @arielgonzaguer/michi-router
+
+# npm
 npm install @arielgonzaguer/michi-router
+
+# yarn
+yarn add @arielgonzaguer/michi-router
 ```
 
 ## Uso rápido
@@ -61,17 +68,87 @@ export default function App() {
 }
 ```
 
-## API
+## API Reference
 
-- `navigate(to, options?)` con `options.replace` y `options.state`.
-- `useLocation()` retorna `{ pathname, search, hash, fullPath }`.
-- `useParams()` retorna los parámetros de la ruta activa.
-- `Link` está diseñado para rutas internas.
+### RouterProvider
+
+| Prop | Tipo | Descripcion |
+|------|------|-------------|
+| `routes` | `Route[]` | Array de rutas a renderizar |
+| `basename` | `string` | Prefijo base para todas las rutas |
+| `notFound` | `ReactNode` | Contenido a mostrar cuando no hay match |
+| `children` | `ReactNode` | Fallback cuando no hay match (alternativa a `notFound`) |
+| `layout` | `ComponentType<{children}>` | Layout wrapper para todas las rutas |
+
+### Route
+
+| Prop | Tipo | Descripcion |
+|------|------|-------------|
+| `path` | `string` | Patron de ruta (`/`, `/users/:id`, `/docs/*`) |
+| `component` | `ReactNode` | Componente a renderizar |
+
+### Link
+
+| Prop | Tipo | Descripcion |
+|------|------|-------------|
+| `to` | `string` | Ruta interna a navegar |
+| `children` | `ReactNode` | Contenido del enlace |
+| `className` | `string` | Clase CSS opcional |
+
+### useNavigate
+
+```typescript
+navigate(to: string, options?: { replace?: boolean; state?: unknown }): void
+```
+
+### useLocation
+
+```typescript
+useLocation(): { pathname: string; search: string; hash: string; fullPath: string }
+```
+
+### useParams
+
+```typescript
+useParams<T extends Record<string, string>>(): T
+```
+
+### Protected
+
+| Prop | Tipo | Descripcion |
+|------|------|-------------|
+| `children` | `ReactNode` | Contenido protegido |
+| `configObject` | `ProtectedConfig` | Configuracion de autenticacion |
+
+### ProtectedConfig
+
+| Prop | Tipo | Descripcion |
+|------|------|-------------|
+| `states` | `{ user: any; isLoading: boolean }` | Estado de autenticacion |
+| `redirectionPath` | `string` | Ruta de redireccion si no esta autenticado |
+| `loadingComponent` | `ReactNode` | Componente de carga opcional |
+| `defaultMessage` | `string` | Mensaje por defecto mientras carga |
 
 ## Entradas del paquete
 
-- `@arielgonzaguer/michi-router`: API completa.
-- `@arielgonzaguer/michi-router/core`: router base sin `Protected`.
-- `@arielgonzaguer/michi-router/protected`: export del componente `Protected`.
+- `@arielgonzaguer/michi-router`: API completa (incluye `Protected`).
+- `@arielgonzaguer/michi-router/core`: router base sin `Protected` (mas pequeno).
+- `@arielgonzaguer/michi-router/protected`: solo el componente `Protected`.
 
-[Documentación 😸](https://michirouter.netlify.app/)
+## Limitaciones
+
+- **SSR/SSG no soportado**: El router depende de `window` y `history.pushState`. Compatible con SSR limitado (el servidor renderiza la ruta por defecto).
+- **Sin code splitting**: Las rutas se cargan todas al inicio.
+- **Sin lazy loading**: No hay soporte para `React.lazy` integrado.
+
+## Compatibilidad
+
+| Caracteristica | Estado |
+|----------------|--------|
+| React 17+ | Soportado |
+| React 18+ | Soportado |
+| React 19+ | No probado |
+| SSR/SSG | No soportado |
+| TypeScript 5+ | Soportado |
+
+[Documentacion](https://michirouter.netlify.app/)
