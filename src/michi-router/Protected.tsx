@@ -28,7 +28,7 @@ export default function Protected<TUser = unknown>({
    * Objeto de configuración para el manejo de rutas protegidas.
    *
    * @property {Object} states - Contiene el estado actual del usuario y el estado de carga.
-   * @property {unknown} states.user - El objeto o valor del usuario actual.
+   * @property {any} states.user - El objeto o valor del usuario actual.
    * @property {boolean} states.isLoading - Indica si el proceso de autenticación/carga está en curso.
    * @property {string} redirectionPath - Ruta a la que se redirige si el usuario no está autenticado.
    * @property {React.ReactNode} [loadingComponent] - Componente personalizado opcional para mostrar mientras carga.
@@ -41,11 +41,18 @@ export default function Protected<TUser = unknown>({
     defaultMessage: configObject?.defaultMessage || undefined
   };
 
+  if (!configObject?.states) {
+    console.error(
+      "Componente Protected: El objeto de configuración es inválido. Este es el formato esperado:\n{\n  states: { user: any; isLoading: boolean };\n  redirectionPath: string;\n  loadingComponent?: React.ReactNode;\n  defaultMessage?: string;\n}"
+    );
+    return null;
+  }
+  
   const safeRedirectionPath = getSafeRedirectionPath(config.redirectionPath);
+
   const { user, isLoading } = config.states;
 
   useEffect(() => {
-    if (!configObject?.states) return;
     if (!isLoading && !user) {
       if (safeRedirectionPath !== config.redirectionPath) {
         console.warn(
@@ -54,14 +61,7 @@ export default function Protected<TUser = unknown>({
       }
       navigate(safeRedirectionPath, { replace: true });
     }
-  }, [isLoading, user, navigate, safeRedirectionPath, config.redirectionPath, configObject?.states]);
-
-  if (!configObject?.states) {
-    console.error(
-      "Componente Protected: El objeto de configuración es inválido. Este es el formato esperado:\n{\n  states: { user: unknown; isLoading: boolean };\n  redirectionPath: string;\n  loadingComponent?: React.ReactNode;\n  defaultMessage?: string;\n}"
-    );
-    return null;
-  }
+  }, [isLoading, user, navigate, safeRedirectionPath, config.redirectionPath]);
 
   if (isLoading) {
     if (config.loadingComponent) return <>{config.loadingComponent}</>;

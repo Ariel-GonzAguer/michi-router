@@ -59,7 +59,6 @@ export const resolveInternalPath = (to: string, basename = '/'): ResolvedInterna
 
   const trimmed = to.trim();
   if (!trimmed) return null;
-  // eslint-disable-next-line no-control-regex -- Intentional: block control characters in URLs for security
   if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null;
 
   const normalizedBasename = normalizeBasename(basename);
