@@ -4,11 +4,11 @@ Todas lasnotas de cambios importantes a este proyecto seguiran el formato
 [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y este proyecto
 sigue [Semantic Versioning](https://semver.org/lang/es/).
 
-## [3.1.0] - 23 de julio de 2025
+## [3.1.0] - 23 de julio de 2026
 
 ### Agregado
 - Configuracion de ESLint y Prettier para el proyecto
-- Tests unitarios para `path-utils.ts`
+- Tests unitarios para `path-utils.ts` (24 tests nuevos)
 - Skill `changelog-updater` para actualizacion automatica del changelog
 - Politica de versiones soportadas en SECURITY.md
 
@@ -16,10 +16,12 @@ sigue [Semantic Versioning](https://semver.org/lang/es/).
 - TypeScript actualizado de 4.9.5 a 5.7.3
 - Scripts de build y release migrados de npm a pnpm
 - `prepublish` renombrado a `prepublishOnly` (deprecated por npm)
-- README actualizado con tabla de API completa y limitaciones
+- README actualizado con tabla de API completa, limitaciones y compatibilidad
+- SECURITY.md actualizado con politica de versiones soportadas
 
 ### Corregido
 - Eliminado `publish.sh` y `PUBLISH.md` del historial de git (archivos sensibles)
+- `Protected.tsx`: fix para遵守 React hooks rules (useEffect condicional)
 
 ## [3.0.4] - 15 de enero de 2025
 
