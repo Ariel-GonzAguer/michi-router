@@ -1,10 +1,10 @@
 # Changelog
 
-Todas lasnotas de cambios importantes a este proyecto seguiran el formato
+Todas las notas de cambios importantes a este proyecto seguiran el formato
 [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y este proyecto
 sigue [Semantic Versioning](https://semver.org/lang/es/).
 
-## [3.2.0] - 23 de julio de 2026
+## [3.3.0] - 23 de julio de 2026
 
 ### Agregado
 - Configuracion de ESLint y Prettier para el proyecto
@@ -21,7 +21,7 @@ sigue [Semantic Versioning](https://semver.org/lang/es/).
 
 ### Corregido
 - Eliminado `publish.sh` y `PUBLISH.md` del historial de git (archivos sensibles)
-- `Protected.tsx`: fix para遵守 React hooks rules (useEffect condicional)
+- `Protected.tsx`: fix para cumple React hooks rules (useEffect condicional)
 
 ## [3.0.4] - 15 de enero de 2025
 
