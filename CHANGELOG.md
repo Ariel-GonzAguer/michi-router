@@ -4,7 +4,7 @@ Todas lasnotas de cambios importantes a este proyecto seguiran el formato
 [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y este proyecto
 sigue [Semantic Versioning](https://semver.org/lang/es/).
 
-## [3.1.0] - 23 de julio de 2026
+## [3.2.0] - 23 de julio de 2026
 
 ### Agregado
 - Configuracion de ESLint y Prettier para el proyecto
