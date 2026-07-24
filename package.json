@@ -30,7 +30,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "pnpm run build:bundle",
-    "clean": "rimraf dist",
+    "clean": "pnpm exec rimraf dist",
     "prebuild": "pnpm run clean",
     "test": "vitest --run",
     "test:watch": "vitest --watch",

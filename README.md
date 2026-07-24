@@ -22,7 +22,7 @@ Router minimalista para React, enfocado en tamaño, DX y seguridad para navegaci
 ## Instalación
 
 ```bash
-npm install @arielgonzaguer/michi-router
+pnpm install @arielgonzaguer/michi-router
 ```
 
 ## Uso rápido
