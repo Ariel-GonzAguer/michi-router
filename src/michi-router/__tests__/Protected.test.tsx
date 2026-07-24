@@ -62,6 +62,7 @@ describe('Protected component', () => {
     
     // Crear un configuración con states nulo para testing
     const invalidConfig = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test case requires invalid type
       states: null as any,
       redirectionPath: '/'
     };

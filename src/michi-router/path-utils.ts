@@ -59,7 +59,7 @@ export const resolveInternalPath = (to: string, basename = '/'): ResolvedInterna
 
   const trimmed = to.trim();
   if (!trimmed) return null;
-  if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null;
+  if (Array.from(trimmed).some((c) => c <= '\u001f' || c === '\u007f')) return null;
 
   const normalizedBasename = normalizeBasename(basename);
   const baseOrigin = typeof window !== 'undefined' ? window.location.origin : FALLBACK_ORIGIN;

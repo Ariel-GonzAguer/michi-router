@@ -41,13 +41,6 @@ export default function Protected<TUser = unknown>({
     defaultMessage: configObject?.defaultMessage || undefined
   };
 
-  if (!configObject?.states) {
-    console.error(
-      "Componente Protected: El objeto de configuración es inválido. Este es el formato esperado:\n{\n  states: { user: any; isLoading: boolean };\n  redirectionPath: string;\n  loadingComponent?: React.ReactNode;\n  defaultMessage?: string;\n}"
-    );
-    return null;
-  }
-  
   const safeRedirectionPath = getSafeRedirectionPath(config.redirectionPath);
 
   const { user, isLoading } = config.states;
@@ -62,6 +55,13 @@ export default function Protected<TUser = unknown>({
       navigate(safeRedirectionPath, { replace: true });
     }
   }, [isLoading, user, navigate, safeRedirectionPath, config.redirectionPath]);
+
+  if (!configObject?.states) {
+    console.error(
+      "Componente Protected: El objeto de configuración es inválido. Este es el formato esperado:\n{\n  states: { user: any; isLoading: boolean };\n  redirectionPath: string;\n  loadingComponent?: React.ReactNode;\n  defaultMessage?: string;\n}"
+    );
+    return null;
+  }
 
   if (isLoading) {
     if (config.loadingComponent) return <>{config.loadingComponent}</>;

@@ -4,6 +4,13 @@ Todas las notas de cambios importantes a este proyecto seguiran el formato
 [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y este proyecto
 sigue [Semantic Versioning](https://semver.org/lang/es/).
 
+## 3.3.1 - 23 de julio de 2026
+
+### Corregido
+- `Protected.tsx`: `useEffect` movido antes del early return para cumplir con `rules-of-hooks` de ESLint
+- `path-utils.ts`: regex con caracteres de control reemplazado por `Array.from().some()` para evitar advertencia `no-control-regex`
+- `__tests__/Protected.test.tsx`: `as any` intencional documentado con `eslint-disable-next-line`
+
 ## [3.3.0] - 23 de julio de 2026
 
 ### Agregado
